@@ -137,6 +137,13 @@
 
   export default {
 
+    mounted () {
+      // 获取获取商家列表
+      this.$store.dispatch('getShops')
+      // 获取获取分类列表
+      this.$store.dispatch('getCategorys')
+    },
+
     computed: {
       ...mapState(['address'])
     },
