@@ -94,7 +94,7 @@
     </section>
 
     <section class="profile_my_order border-1px" v-show="user._id">
-      <button>退出登陆</button>
+      <button @click="logout">退出登陆</button>
     </section>
   </div>
 </template>
@@ -104,6 +104,14 @@
   export default {
     computed: {
       ...mapState(['user'])
+    },
+    methods: {
+      logout () {
+        if(confirm('你确认退出吗?')) {
+          // 请求后台退出
+          this.$store.dispatch('logout')
+        }
+      }
     }
   }
 </script>

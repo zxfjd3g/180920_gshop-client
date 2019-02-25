@@ -12,6 +12,9 @@
     mounted () {
       // 触发vuex的getAddress(), 从后台获取address
       this.$store.dispatch('getAddress')
+      // 触发vuex的getUser(), 从后台获取user
+      this.$store.dispatch('getUser')
+
     },
 
     components: {
