@@ -41,7 +41,7 @@
 ## 4. 异步显示数据
     封装ajax: 
         promise+axios封装ajax请求的函数
-        封装每个接口对应的请求函数(能根据接口定义ajax请求函数)
+        封装每个接口对应的请求函数(能根据接口文档定义)
         解决ajax的跨越域问题: 配置代理, 对代理的理解
     vuex编码
         创建所有相关的模块: store/index|state|mutations|actions|getters|mutation-types
