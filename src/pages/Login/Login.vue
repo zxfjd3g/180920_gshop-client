@@ -41,7 +41,8 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <img ref="captcha" class="get_verification" src="http://localhost:5000/captcha"
+                     alt="captcha" @click="updateCaptcha">
               </section>
             </section>
           </div>
@@ -57,6 +58,11 @@
 </template>
 
 <script>
+  import {
+    reqSendCode,
+    reqPwdLogin,
+    reqSmsLogin
+  } from '../../api'
   export default {
 
     data() {
@@ -81,29 +87,45 @@
 
     methods: {
       // 发送短信验证码
-      sendCode() {
+      async sendCode() {
         // 开启计时
         this.computeTime = 30
         const intervalId = setInterval(() => {
           this.computeTime--
-          if(this.computeTime===0) {
+          if(this.computeTime<=0) {
+            this.computeTime = 0
             clearInterval(intervalId)
           }
         }, 1000)
+
+        // 发送ajax: 向指定手机号发短信验证码
+        const result = await reqSendCode(this.phone) // {code: 0}  {code: 1: msg: ''}
+        if(result.code===0) { // 短信发送成功
+          alert('验证码发送成功')
+        } else { // 短信发送失败
+          alert(result.msg)
+          // 停止计时
+          this.computeTime = 0
+        }
       },
 
       // 登陆
-      login () {
+      async login () {
         // 进行前台表单验证, 如果不通过, 提示
         const {loginWay, phone,isRightPhone, code, name, pwd, captcha} = this
+        let result
         if(loginWay) { // 短信
           if(!isRightPhone) {
             alert('必须输入正确的手机号')
             return
-          } else if (!/^\d{4}$/.test(code)) {
+          } else if (!/^\d{6}$/.test(code)) {
             alert('验证码必须是4位数字')
             return
           }
+          // 发送ajax请求: 短信登陆
+          result = await reqSmsLogin(phone, code)
+          // 停止计时
+          this.computeTime = 0
         } else { // 密码
           if(!name.trim()) {
             alert('必须输入用户名')
@@ -115,10 +137,28 @@
             alert('必须输入图形验证码')
             return
           }
+
+          // 发送ajax请求: 密码登陆
+          result = await reqPwdLogin({name, pwd, captcha})
         }
 
-        console.log('发送登陆的ajax请求')
+        // 根据result处理
+        if(result.code===0) { // 成功了
+          const user = result.data
 
+          // 保存到vuex
+          this.$store.dispatch('saveUser', user)
+          // 跳转到profile界面
+          this.$router.replace('/profile')
+        } else { // 登陆失败
+          alert(result.msg)
+        }
+
+      },
+
+      // 更新图形验证码
+      updateCaptcha () {
+        this.$refs.captcha.src = 'http://localhost:5000/captcha?time='+Date.now()
       }
     }
   }

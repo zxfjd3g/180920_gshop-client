@@ -79,4 +79,25 @@
     5). 前台表单验证
     
 ## 2. 登陆的前后台交互效果
+    1). 一次性图形验证码
+    2). 一次性验证码
+    3). 手机号/验证码登陆
+    4). 用户名/密码/图形验证码登陆
+    5). 退出登陆
+    6). 自动登陆
 
+## cookie与session
+    cookie:
+    	会话cookie: 保存在浏览器的运行时内存中, 关闭浏览器数据不存在了
+    	持久化cookie: 保存在浏览器管理的文件中, 关闭浏览器数据还存在了
+    
+    sesion:
+    	会话:  从浏览器打开到关闭整体过程都是一个会话
+    	会话/session对象: 保存在服务器端用来存储数据的容器, 
+    			这个对象一旦产生, 服务器会自动向浏览返回一个对应的cookie, 用来保存session的ID: connect.sid=sessionID
+    			在服务器通过req.session获取session对象
+    				1. 从req中取出以connect.sid为key的cookie值
+    				2. 如果有, 找到对应的session对象
+    				3. 如果没有, 创建新的session对象
+    	目标: 关闭浏览器, 再打开还是同一个会话?
+    		让connect.sid的cookie成为一个持久化cookie
