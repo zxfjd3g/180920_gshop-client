@@ -7,6 +7,7 @@ import router from './router'
 import Header from './components/Header/Header.vue'
 import Star from './components/Star/Star.vue'
 import store from './store'
+import './mock/mockServer'  // mockServer.js会被打包执行一次
 
 // 注册全局组件
 Vue.component('Header', Header)
