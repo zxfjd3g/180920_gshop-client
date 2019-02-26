@@ -6,7 +6,7 @@
         <i class="iconfont icon-arrow_left"/>
       </a>
     </nav>
-    <div class="shop-content">
+    <div class="shop-content" @click="showBulletin=true">
       <img :src="info.avatar" class="content-image">
       <div class="header-content">
         <h2 class="content-title">
@@ -29,13 +29,13 @@
       </div>
     </div>
 
-    <div class="shop-header-discounts" v-if="info.name">
+    <div class="shop-header-discounts" v-if="info.name" @click="showSupports=true">
       <div class="discounts-left">
-        <div class="activity activity-green">
+        <div class="activity" :class="supportClasses[info.supports[0].type]">
           <span class="content-tag">
             <span class="mini-tag">{{info.supports[0].name}}</span>
           </span>
-          <span class="activity-content">{{info.supports[0].content}}</span>
+          <span class="activity-content ellipsis">{{info.supports[0].content}}</span>
         </div>
       </div>
       <div class="discounts-right">
@@ -43,72 +43,64 @@
       </div>
     </div>
 
-    <div class="shop-brief-modal" style="display: none;">
-      <div class="brief-modal-content">
-        <h2 class="content-title">
+    <transition name="fade">
+      <div class="shop-brief-modal" v-show="showBulletin">
+        <div class="brief-modal-content">
+          <h2 class="content-title">
           <span class="content-tag">
             <span class="mini-tag">品牌</span>
           </span>
-          <span class="content-name">嘉禾一品（温都水城）</span>
-        </h2>
-        <ul class="brief-modal-msg">
-          <li>
-            <h3>3.5</h3>
-            <p>评分</p>
-          </li>
-          <li>
-            <h3>90单</h3>
-            <p>月售</p>
-          </li>
-          <li>
-            <h3>硅谷专送</h3>
-            <p>约28分钟</p>
-          </li>
-          <li>
-            <h3>4元</h3>
-            <p>配送费用</p>
-          </li>
-          <li>
-            <h3>1000m</h3>
-            <p>距离</p>
-          </li>
-        </ul>
-        <h3 class="brief-modal-title">
-          <span>公告</span></h3>
-        <div class="brief-modal-notice">
-          是以粥为特色的中式营养快餐，自2004年10月18日创立“嘉和一品”品牌至今
+            <span class="content-name">{{info.name}}</span>
+          </h2>
+          <ul class="brief-modal-msg">
+            <li>
+              <h3>{{info.score}}</h3>
+              <p>评分</p>
+            </li>
+            <li>
+              <h3>{{info.sellCount}}单</h3>
+              <p>月售</p>
+            </li>
+            <li>
+              <h3>{{info.description}}</h3>
+              <p>约{{info.deliveryTime}}分钟</p>
+            </li>
+            <li>
+              <h3>{{info.deliveryPrice}}元</h3>
+              <p>配送费用</p>
+            </li>
+            <li>
+              <h3>{{info.distance}}</h3>
+              <p>距离</p>
+            </li>
+          </ul>
+          <h3 class="brief-modal-title">
+            <span>公告</span></h3>
+          <div class="brief-modal-notice">
+            {{info.bulletin}}
+          </div>
+          <div class="mask-footer" @click="showBulletin=false">
+            <span class="iconfont icon-close"></span>
+          </div>
         </div>
-        <div class="mask-footer">
-          <span class="iconfont icon-close"></span>
-        </div>
+        <div class="brief-modal-cover"></div>
       </div>
-      <div class="brief-modal-cover"></div>
-    </div>
-    <div class="activity-sheet" style="display: none;">
+    </transition>
+
+
+    <div class="activity-sheet" v-show="showSupports">
       <div class="activity-sheet-content">
-        <h2 class="activity-sheet-title">
-          优惠活动</h2>
+        <h2 class="activity-sheet-title">优惠活动</h2>
         <ul class="list">
-          <li class="activity-item activity-green">
+          <li class="activity-item" :class="supportClasses[support.type]" v-for="(support, index) in info.supports" :key="index">
             <span class="content-tag">
-              <span class="mini-tag">首单</span>
+              <span class="mini-tag">{{support.name}}</span>
             </span>
-            <span class="activity-content">新用户下单立减17元(不与其它活动同享)</span>
+            <span class="activity-content">{{support.content}}</span>
           </li>
-          <li class="activity-item activity-red">
-            <span class="content-tag">
-              <span class="mini-tag">满减</span>
-            </span>
-            <span class="activity-content">满35减19，满65减35</span>
-          </li>
-          <li class="activity-item activity-orange">
-            <span class="content-tag">
-              <span class="mini-tag">特价</span>
-            </span>
-            <span class="activity-content">【立减19.5元】欢乐小食餐</span>
-          </li>
+
         </ul>
-        <div class="activity-sheet-close">
+        <div class="activity-sheet-close" @click="showSupports=false">
           <span class="iconfont icon-close"></span>
         </div>
       </div>
@@ -121,6 +113,15 @@
 <script>
   import {mapState} from 'vuex'
   export default {
+
+    data () {
+      return {
+        showBulletin: false, // 是否显示公告相关
+        showSupports: false, // 是否显示优惠列表
+        supportClasses: ['activity-green', 'activity-red', 'activity-orange']
+      }
+    },
+
     computed: {
       ...mapState({
         info: state => state.shop.info
@@ -319,6 +320,11 @@
       z-index 52
       flex-direction column
       color #333
+      &.fade-enter-active, &.fade-leave-active
+        transition opacity .5s
+      &.fade-enter, &.fade-leave-to
+        opacity 0
+
       .brief-modal-cover
         position absolute
         width 100%

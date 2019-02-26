@@ -131,3 +131,12 @@
         用来提供mock数据接口的库
         生成随机数据, 拦截ajax请求
         
+## 3. vuex的多模块编码
+    1). 设计多个模块
+        msite
+        user
+        shop
+    2). 将state拆分到对应的模块中, 确定整个state的结构
+    3). 将mutation和action拆分到对应的模块中
+    4). 在组件中通过mapState读取特定模块的状态数据
+        ...mapState({user: state => state.user.user})
