@@ -46,9 +46,26 @@
 
 <script>
   import {mapState} from 'vuex'
+  import BScroll from 'better-scroll'
+
   export default {
-    mounted () {
-      this.$store.dispatch('getShopGoods')
+    async mounted () {
+      // 使用callback + nextTick
+      this.$store.dispatch('getShopGoods', () => {
+        this.$nextTick(() => {
+          // 在列表数据显示之后创建对象
+          new BScroll('.menu-wrapper', {})
+          new BScroll('.foods-wrapper', {})
+        })
+      })
+
+      /*
+      利用dispatch返回的promise
+      promise内部在更新完界面后才调用resolve()
+      */
+      /*await this.$store.dispatch('getShopGoods')
+      new BScroll('.menu-wrapper', {})
+      new BScroll('.foods-wrapper', {})*/
     },
 
     computed: {

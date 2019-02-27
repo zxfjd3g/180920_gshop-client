@@ -154,7 +154,7 @@
           模板中显示
     2). 初始显示异常
         情况: Cannot read property 'xxx' of undefined"
-        原因: 初始值是空对象, 内部没有数据, 而模块中直接显示3层表达式
+        原因: 初始值是空对象, 内部没有数据, 而模板中直接显示3层表达式
         解决: 使用v-if指令
     3). vue transition动画
         <transition name="xxx">
