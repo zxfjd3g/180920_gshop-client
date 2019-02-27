@@ -197,3 +197,5 @@
     一旦当前分类变化了, 让左侧列表滑动当前分类处
     如何判断变化了?
     scroll.scrollToElement(li)
+    
+## 5. CartControl组件

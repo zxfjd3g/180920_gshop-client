@@ -18,7 +18,8 @@
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods"
+                  :key="index" @click="showFood(food)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -33,7 +34,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -42,6 +43,8 @@
         </ul>
       </div>
     </div>
+    <!--标签对象就是组件对象-->
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 
@@ -49,12 +52,17 @@
   import {mapState} from 'vuex'
   import BScroll from 'better-scroll'
 
+  import Food from '../../../components/Food/Food.vue'
+  // import Food from '@/components/Food/Food.vue'
+
+
   export default {
 
     data() {
       return {
         scrollY: 0, // 右侧列表在Y轴滑动坐标  --> 初始值是0, 在右侧滑动过程中不断变化
         tops: [], // 右侧所有分类列表li的top组成的数组  --> 初始值[], 在列表显示之后确定其值, 后面不再变化
+        food: {}, // 要显示的food
       }
     },
     async mounted() {
@@ -167,6 +175,18 @@
         // 让右侧列表滑动到对应的位置
         this.rightScroll.scrollTo(0, -top, 500)
       },
+
+      // 显示指定food
+      showFood (food) {
+        // 1. 更新food状态
+        this.food = food
+        // 2. 显示food组件界面
+        this.$refs.food.toggleShow()
+      }
+    },
+
+    components: {
+      Food
     }
   }
 </script>

@@ -1,7 +1,10 @@
+import Vue from 'vue'
 import {
   RECEIVE_INFO,
   RECEIVE_RATINGS,
-  RECEIVE_GOODS
+  RECEIVE_GOODS,
+  ADD_FOOD_COUNT,
+  REDUCE_FOOD_COUNT
 } from '../mutation-types'
 
 import {
@@ -30,6 +33,21 @@ const mutations = {
 
   [RECEIVE_GOODS](state, {goods}) {
     state.goods = goods
+  },
+  [ADD_FOOD_COUNT](state, {food}) {
+    if(food.count) {
+      food.count++
+    } else { // 第一次增加
+      // 给food添加一个新的属性 count: 1   没有数据绑定
+      // food.count = 1
+      // Vue.set( target, key, value )
+      Vue.set(food, 'count', 1)
+    }
+  },
+  [REDUCE_FOOD_COUNT](state, {food}) {
+    if(food.count>0) {
+      food.count--
+    }
   },
 }
 
@@ -61,6 +79,15 @@ const actions = {
       commit(RECEIVE_GOODS, {goods})
       // 更新状态后立即调用回调函数
       typeof callback==='function' && callback()
+    }
+  },
+
+  // 更新指定food的数量
+  updateFoodCount ({commit}, {isAdd, food}) {
+    if(isAdd) {
+      commit(ADD_FOOD_COUNT, {food})
+    } else {
+      commit(REDUCE_FOOD_COUNT, {food})
     }
   }
 }
