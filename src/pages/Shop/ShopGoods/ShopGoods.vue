@@ -2,10 +2,10 @@
   <div>
     <div class="goods">
       <div class="menu-wrapper">
-        <ul>
+        <ul ref="leftUl">
           <!--current-->
           <li class="menu-item" v-for="(good, index) in goods"
-              :key="index" :class="{current: index===currentIndex}">
+              :key="index" :class="{current: index===currentIndex}" @click="clickLeftItem(index)">
             <span class="text bottom-border-1px">
               <img class="icon" v-if="good.icon" :src="good.icon">
               {{good.name}}
@@ -51,13 +51,13 @@
 
   export default {
 
-    data () {
+    data() {
       return {
         scrollY: 0, // 右侧列表在Y轴滑动坐标  --> 初始值是0, 在右侧滑动过程中不断变化
         tops: [], // 右侧所有分类列表li的top组成的数组  --> 初始值[], 在列表显示之后确定其值, 后面不再变化
       }
     },
-    async mounted () {
+    async mounted() {
       // 使用callback + nextTick
       this.$store.dispatch('getShopGoods', () => {
         this.$nextTick(() => {
@@ -81,39 +81,56 @@
       }),
 
       // 当前分类的下标
-      currentIndex () {
+      currentIndex() {
         console.log('currentIndex()')
         const {scrollY, tops} = this
         /*
         tops = [0, 5, 8, 10, 16]
         scrollY = 9   [top, nextTop)   top所对应的index就是currentIndex
          */
-        return tops.findIndex((top, index) => scrollY>=top && scrollY<tops[index+1])
+        // 得到当前新的下标
+        const index = tops.findIndex((top, index) => scrollY >= top && scrollY < tops[index + 1])
+
+        // 如果下标变化, 让左侧列表滑动当前分类处
+        /*需要保存index: this组件对象*/
+        if(this.index!=index && this.leftScroll) {
+          this.index = index
+          // 得到index对应的分类项li
+          const li = this.$refs.leftUl.children[index]
+          // 滑动右侧列表到指定li
+          this.leftScroll.scrollToElement(li, 500)
+        }
+
+
+        return index
       }
     },
 
     methods: {
       // 初始化滚动对象
-      _initScroll () {
+      _initScroll() {
         // 在列表数据显示之后创建对象
 
         // 左侧滑动对象
-        const leftScroll = new BScroll('.menu-wrapper', {})
+        this.leftScroll = new BScroll('.menu-wrapper', {
+          click: true, // 才会分发click事件
+        })
         // 右侧滑动对象
-        const rightScroll = new BScroll('.foods-wrapper', {
+        this.rightScroll = new BScroll('.foods-wrapper', {
           probeType: 1, // 触摸, 每隔一定的时间触发一次
           // probeType: 2, // 触摸, 实时的
           // probeType: 3, // 触摸/惯性, 实时的
+          click: true, // 才会分发click事件
         })
 
         // 绑定对右侧滑动的监听
-        rightScroll.on('scroll', ({x, y}) => {
+        this.rightScroll.on('scroll', ({x, y}) => {
           console.log('scroll', x, y)
           this.scrollY = Math.abs(y)
         })
 
         // 绑定对右侧滑动结束的监听
-        rightScroll.on('scrollEnd', ({x, y}) => {
+        this.rightScroll.on('scrollEnd', ({x, y}) => {
           console.log('scrollEnd', x, y)
           this.scrollY = Math.abs(y)
         })
@@ -121,7 +138,7 @@
       },
 
       // 初始统计右侧所有分类li的top值
-      _initTops () {
+      _initTops() {
         const tops = []
         let top = 0
         tops.push(top)
@@ -135,7 +152,21 @@
         // 更新tops状态
         this.tops = tops
         console.log('tops', tops)
-      }
+      },
+
+      // 点击左侧分类项
+      clickLeftItem(index) {
+        console.log('clickLeftItem()')
+
+        // 得到目标位置对应的top
+        const top = this.tops[index]
+
+        // 立即更新scrollY为最终位置的坐标
+        this.scrollY = top
+
+        // 让右侧列表滑动到对应的位置
+        this.rightScroll.scrollTo(0, -top, 500)
+      },
     }
   }
 </script>
