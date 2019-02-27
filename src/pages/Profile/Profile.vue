@@ -1,23 +1,27 @@
 <template>
   <div class="profile">
     <Header title="我的"/>
-    <section class="profile-number" @click="$router.push('/login')">
+    <section class="profile-number" @click="$router.push(user._id ? '/user_info' : '/login')">
       <a href="javascript:" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
-          <p>
-                <span class="user-icon">
-                  <i class="iconfont icon-shouji icon-mobile"></i>
-                </span>
-            <span class="icon-mobile-number">暂无绑定手机号</span>
+          <p class="user-info-top" v-show="!user.phone">
+            {{user.name ? user.name : '登录/注册'}}
+          </p>
+          <p v-show="!user.name">
+            <span class="user-icon">
+              <i class="iconfont icon-shouji icon-mobile"></i>
+            </span>
+            <span class="icon-mobile-number">
+              {{user.phone ? user.phone : '未绑定手机号'}}
+            </span>
           </p>
         </div>
         <span class="arrow">
-              <i class="iconfont icon-jiantou1"></i>
-            </span>
+          <i class="iconfont icon-jiantou1"></i>
+        </span>
       </a>
     </section>
     <section class="profile_info_data border-1px">
@@ -88,11 +92,30 @@
         </div>
       </a>
     </section>
+
+    <section class="profile_my_order border-1px" v-show="user._id">
+      <button @click="logout">退出登陆</button>
+    </section>
   </div>
 </template>
 
 <script>
-  export default {}
+  import {mapState} from 'vuex'
+  export default {
+    computed: {
+      ...mapState({
+        user: state => state.user.user
+      })
+    },
+    methods: {
+      logout () {
+        if(confirm('你确认退出吗?')) {
+          // 请求后台退出
+          this.$store.dispatch('logout')
+        }
+      }
+    }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>

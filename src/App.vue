@@ -9,9 +9,13 @@
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
   export default {
 
-    mounted () {
+    async mounted () {
       // 触发vuex的getAddress(), 从后台获取address
       this.$store.dispatch('getAddress')
+      // 触发vuex的getUser(), 从后台获取user
+      this.$store.dispatch('getUser')
+
+      // this.$store.dispatch('getShopInfo')
     },
 
     components: {
