@@ -4,7 +4,8 @@ import {
   RECEIVE_RATINGS,
   RECEIVE_GOODS,
   ADD_FOOD_COUNT,
-  REDUCE_FOOD_COUNT
+  REDUCE_FOOD_COUNT,
+  CLEAR_CART
 } from '../mutation-types'
 
 import {
@@ -57,6 +58,13 @@ const mutations = {
       }
     }
   },
+
+  [CLEAR_CART] (state) {
+    // 将购物车中所有的food的count置为0
+    state.cartFoods.forEach(food => food.count = 0)
+    // 重置购物车数组
+    state.cartFoods = []
+  }
 }
 
 const actions = {
@@ -97,6 +105,11 @@ const actions = {
     } else {
       commit(REDUCE_FOOD_COUNT, {food})
     }
+  },
+
+  // 清除购物车
+  clearCart ({commit}) {
+    commit(CLEAR_CART)
   }
 }
 
