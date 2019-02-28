@@ -199,3 +199,10 @@
     scroll.scrollToElement(li)
     
 ## 5. CartControl组件
+    1). 给food设计count属性, 并由actions提供更新的方法
+    2). 问题: 更新状态数据, 对应的界面不变化
+      原因: 给一个已有绑定的对象直接添加一个新的属性, 这个属性没有数据绑定
+      解决: 
+        Vue.set(obj, 'xxx', value)才有数据绑定
+        this.$set(obj, 'xxx', value)才有数据绑定
+    3). vue transition

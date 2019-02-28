@@ -42,6 +42,7 @@
           </li>
         </ul>
       </div>
+      <ShopCart/>
     </div>
     <!--标签对象就是组件对象-->
     <Food :food="food" ref="food"/>
@@ -54,6 +55,7 @@
 
   import Food from '../../../components/Food/Food.vue'
   // import Food from '@/components/Food/Food.vue'
+  import ShopCart from '../../../components/ShopCart/ShopCart.vue'
 
 
   export default {
@@ -186,7 +188,8 @@
     },
 
     components: {
-      Food
+      Food,
+      ShopCart
     }
   }
 </script>
