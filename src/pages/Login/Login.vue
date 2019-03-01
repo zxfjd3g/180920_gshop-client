@@ -160,6 +160,21 @@
       updateCaptcha () {
         this.$refs.captcha.src = 'http://localhost:5000/captcha?time='+Date.now()
       }
+    },
+
+    // 在进入当前组件前自动调用
+    beforeRouteEnter (to, from, next) {
+
+      next((comp) => { // 回调函数在组件对象创建后调用, 并且将组件对象调用回调函数
+        // 判断如果已经登陆, 跳转到个人中心界面, 否则放行
+        if(comp.$store.state.user.user._id) {
+          next('/profile')
+        } else {
+          next()
+        }
+      })
+
+
     }
   }
 </script>

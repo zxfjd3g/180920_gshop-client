@@ -18,12 +18,17 @@ const Search = () => import('../pages/Search/Search.vue')
 const Order = () => import('../pages/Order/Order.vue')
 const Profile = () => import('../pages/Profile/Profile.vue')
 
-
 import Login from '../pages/Login/Login.vue'
 import Shop from '../pages/Shop/Shop.vue'
 import ShopGoods from '../pages/Shop/ShopGoods/ShopGoods.vue'
 import ShopRatings from '../pages/Shop/ShopRatings/ShopRatings.vue'
 import ShopInfo from '../pages/Shop/ShopInfo/ShopInfo.vue'
+
+
+import A from '../pages/test/A.vue'
+import B from '../pages/test/B.vue'
+import B1 from '../pages/test/B1.vue'
+import B2 from '../pages/test/B2.vue'
 
 export default [
   {
@@ -84,5 +89,24 @@ export default [
   {
     path: '/',
     redirect: '/msite'
-  }
+  },
+
+  {
+    path: '/a',
+    component: A
+  },
+  {
+    path: '/b',
+    component: B,
+    children: [
+      {
+        path: '/b/b1',
+        component: B1
+      },
+      {
+        path: '/b/b2',
+        component: B2
+      },
+    ]
+  },
 ]
