@@ -137,6 +137,16 @@ const getters = {
   // 总价格
   totalPrice (state) {
     return state.cartFoods.reduce((preTotal, item) => preTotal + item.count*item.price, 0)
+  },
+
+  // 评价总数量
+  totalRatingCount (state) {
+    return state.ratings.length
+  },
+
+  // 推荐的评价总数量
+  totalUpRatingCount (state) {
+    return state.ratings.reduce((pre, rating) => pre + (rating.rateType===0 ? 1 : 0), 0)
   }
 }
 

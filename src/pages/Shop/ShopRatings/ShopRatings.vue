@@ -26,11 +26,15 @@
 
       <Split/>
 
-      <div>RatingsFilter组件</div>
+      <RatingsFilter :selectType="selectType"
+                     :onlyContent="onlyContent"
+                     @setSelectType="setSelectType"
+                     @toggleOnlyCotent="toggleOnlyCotent"
+      />
 
       <div class="rating-wrapper">
         <ul>
-          <li class="rating-item" v-for="(rating, index) in ratings" :key="index">
+          <li class="rating-item" v-for="(rating, index) in filterRatings" :key="index">
             <div class="avatar">
               <img width="28" height="28" :src="rating.avatar">
             </div>
@@ -57,7 +61,16 @@
   import BScroll from 'better-scroll'
   import {mapState} from 'vuex'
 
+  import RatingsFilter from '../../../components/RatingsFilter/RatingsFilter.vue'
+
   export default {
+    data () {
+      return {
+        selectType: 0, // 0: 推荐, 1: 吐槽, 2: 全部
+        onlyContent: true, // 是否只看有text的
+      }
+    },
+
     mounted () {
       this.$store.dispatch('getShopRatings', () => {
         this.$nextTick(() => {
@@ -72,7 +85,46 @@
       ...mapState({
         info: state => state.shop.info,
         ratings: state => state.shop.ratings,
-      })
+      }),
+
+      filterRatings () {
+        const {ratings, selectType, onlyContent} = this
+
+        // 对数组进行过滤
+        return ratings.filter(rating => {
+          const {rateType, text} = rating
+          /*
+          条件1
+          selectType: 0/1/2
+          rateType: 0/1
+          selectType===2 || selectType===rateType
+           */
+          /*
+          条件2
+          onlyContent: true/false
+          text: length>0 / length===0
+          onlyContent===false || text.length>0
+           */
+
+
+          return (selectType===2 || selectType===rateType) && (onlyContent===false || text.length>0)
+        })
+      }
+    },
+
+    methods: {
+      // 设置新的selectType
+      setSelectType (selectType) {
+        this.selectType = selectType
+      },
+
+      toggleOnlyCotent () {
+        this.onlyContent = !this.onlyContent
+      }
+    },
+
+    components: {
+      RatingsFilter
     }
   }
 </script>
