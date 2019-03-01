@@ -154,7 +154,7 @@
           模板中显示
     2). 初始显示异常
         情况: Cannot read property 'xxx' of undefined"
-        原因: 初始值是空对象, 内部没有数据, 而模块中直接显示3层表达式
+        原因: 初始值是空对象, 内部没有数据, 而模板中直接显示3层表达式
         解决: 使用v-if指令
     3). vue transition动画
         <transition name="xxx">
@@ -162,3 +162,57 @@
           transition
         xxx-enter / xxx-leave-to
           隐藏时的样式
+          
+# day05
+
+## 1. 基本滑动
+    使用better-scroll
+    new BScroll(wrapDiv, {})
+    创建BScroll对象的时机
+      watch + $nextTick()
+      自定义callback + $nextTick
+      利用dispatch()返回promise
+    better-scroll禁用了原生的dom事件, 使用的是自定义事件
+    
+## 2. 滑动右侧列表, 左侧的当前分类会变化
+    1). 设计一个计算属性: currentIndex代表当前分类的下标
+    2). 相关数据
+      滚动的y坐标: scrollY---> 给右侧列表绑定一个滚动的监听
+      右侧分类<li>的top数组: tops-->列表第一次显示之后统计
+    3). 计算的逻辑
+       scrollY>=top && scrollY<nextTop
+    4). 在列表显示之后确定tops
+    5). 绑定scroll/scrollEnd监听, 在回调中设置scrollY值
+    6). 如何形成滚动 
+        触摸滑动
+        惯性滑动
+        编码滑动
+    
+## 3). 点击左侧分类项, 右侧列表滑动到对应位置
+    1). 绑定点击监听
+    2). 通过rightScroll滚动到对应的位置: scroll.scrollTo(0, -tops[index])
+    3). 立即更新scrollY
+
+## 4. 如何保证当前分类项总是可见?
+    一旦当前分类变化了, 让左侧列表滑动当前分类处
+    如何判断变化了?
+    scroll.scrollToElement(li)
+    
+## 5. CartControl组件
+    1). 给food设计count属性, 并由actions提供更新的方法
+    2). 问题: 更新状态数据, 对应的界面不变化
+      原因: 给一个已有绑定的对象直接添加一个新的属性, 这个属性没有数据绑定
+      解决: 
+        Vue.set(obj, 'xxx', value)才有数据绑定
+        this.$set(obj, 'xxx', value)才有数据绑定
+    3). vue transition
+    
+## 3. ShopCart组件
+    1). 将购物项列表数据定义到vuex的state中: cartFoods
+    2). 在vuex的getters中定义: totalCount, totalPrice
+    3). 解决几个功能性bug
+        a. 删除所有购物项, 购物车列表还打开着
+        b. 添加一个购物项, 购物车列表自动打开
+        c. 购物车列表不能滑动
+        d. 购物车列表中点一次添加, 会增加多项
+        e. 原本可以滑动的列表, 关闭再打开后不能再滑动了

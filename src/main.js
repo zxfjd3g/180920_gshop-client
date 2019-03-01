@@ -6,12 +6,14 @@ import App from './App.vue'
 import router from './router'
 import Header from './components/Header/Header.vue'
 import Star from './components/Star/Star.vue'
+import CartControl from './components/CartControl/CartControl.vue'
 import store from './store'
 import './mock/mockServer'  // mockServer.js会被打包执行一次
 
 // 注册全局组件
 Vue.component('Header', Header)
 Vue.component('Star', Star)
+Vue.component('CartControl', CartControl)
 
 new Vue({
   el: '#app',
