@@ -206,3 +206,13 @@
         Vue.set(obj, 'xxx', value)才有数据绑定
         this.$set(obj, 'xxx', value)才有数据绑定
     3). vue transition
+    
+## 3. ShopCart组件
+    1). 将购物项列表数据定义到vuex的state中: cartFoods
+    2). 在vuex的getters中定义: totalCount, totalPrice
+    3). 解决几个功能性bug
+        a. 删除所有购物项, 购物车列表还打开着
+        b. 添加一个购物项, 购物车列表自动打开
+        c. 购物车列表不能滑动
+        d. 购物车列表中点一次添加, 会增加多项
+        e. 原本可以滑动的列表, 关闭再打开后不能再滑动了
