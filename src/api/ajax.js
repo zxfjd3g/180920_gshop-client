@@ -5,6 +5,7 @@
 2. 对请求错误进行了统一的处理, 外面使用时不用再处理错误
  */
 import axios from 'axios'
+import {MessageBox} from 'mint-ui'
 
 export default function ajax(url, data={}, method='GET') {
 
@@ -24,7 +25,8 @@ export default function ajax(url, data={}, method='GET') {
       // 请求失败调用reject
       // reject(error)
       // 统一处理请求错误, 外面使用async/await不用使用try来处理错误
-      alert('请求出错', error.message)
+      // alert('请求出错: ' + error.message)
+      MessageBox.alert('请求出错: ' + error.message)
     })
   })
 }

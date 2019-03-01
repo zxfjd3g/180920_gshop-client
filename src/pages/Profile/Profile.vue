@@ -94,7 +94,7 @@
     </section>
 
     <section class="profile_my_order border-1px" v-show="user._id">
-      <button @click="logout">退出登陆</button>
+      <mt-button type='danger' @click="logout" style="width: 100%">退出登陆</mt-button>
     </section>
 
     <section class="profile_my_order border-1px">
@@ -109,6 +109,7 @@
 
 <script>
   import {mapState} from 'vuex'
+  import { MessageBox } from 'mint-ui'
   export default {
     computed: {
       ...mapState({
@@ -117,10 +118,17 @@
     },
     methods: {
       logout () {
-        if(confirm('你确认退出吗?')) {
+        MessageBox.confirm('你确认退出吗?').then(() => {
+          console.log('确定')
+          this.$store.dispatch('logout')
+        }).catch(() => {
+          console.log('取消')
+        })
+
+        /*if(confirm('你确认退出吗?')) {
           // 请求后台退出
           this.$store.dispatch('logout')
-        }
+        }*/
       }
     }
   }

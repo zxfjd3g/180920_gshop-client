@@ -3,6 +3,7 @@
  */
 import Vue from 'vue'
 import VueLazyload from 'vue-lazyload'
+import { Button } from 'mint-ui';
 
 import App from './App.vue'
 import router from './router'
@@ -16,6 +17,7 @@ import './filters'
 import loading from './common/imgs/loading.gif'
 
 // 注册全局组件
+Vue.component(Button.name, Button) // mt-button
 Vue.component('Header', Header)
 Vue.component('Star', Star)
 Vue.component('CartControl', CartControl)
