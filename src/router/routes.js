@@ -29,6 +29,7 @@ import A from '../pages/test/A.vue'
 import B from '../pages/test/B.vue'
 import B1 from '../pages/test/B1.vue'
 import B2 from '../pages/test/B2.vue'
+import NotFound from '../pages/NotFound/NotFound.vue'
 
 export default [
   {
@@ -109,4 +110,8 @@ export default [
       },
     ]
   },
+  {
+    path: '/*', /*配置任意路径*/
+    component: NotFound
+  }
 ]
